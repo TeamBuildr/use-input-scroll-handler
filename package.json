@@ -1,6 +1,6 @@
 {
-  "name": "react-native-use-input-scroll-handler",
-  "version": "0.1.1",
+  "name": "@teambuildr/react-native-use-input-scroll-handler",
+  "version": "0.1.2",
   "description": "A react-native hook that handle auto-scroll when input is focused and behind keyboard.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -36,13 +36,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/JMagrin/use-input-scroll-handler.git",
+  "repository": "https://github.com/teambuildr/use-input-scroll-handler.git",
   "author": "Jérémy Magrin <contact@magrin.fr> (https://magrin.fr)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/JMagrin/use-input-scroll-handler.git/issues"
   },
-  "homepage": "https://github.com/JMagrin/use-input-scroll-handler.git#readme",
+  "homepage": "https://github.com/teambuildr/use-input-scroll-handler.git#readme",
   "publishConfig": {
     "cache": "~/.npm",
     "registry": "https://registry.npmjs.org/"

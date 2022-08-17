@@ -46,6 +46,7 @@ export default function useInputScrollHandler(options: Options = {}) {
 
   // States
   const [keyboardSpace, setKeyboardSpace] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   // Functions
   const getScrollResponder = () => {
@@ -80,9 +81,14 @@ export default function useInputScrollHandler(options: Options = {}) {
     offset.current = e.nativeEvent.contentOffset;
   };
 
-  const handleUpdateKeyboardSpace: KeyboardEventListener = (e) => {
+  const handleUpdateKeyboardSpace = (e: any, isScrolling: boolean) => {
     // @ts-ignore
-    const currentlyFocusedField = TextInput.State.currentlyFocusedInput
+    if (isScrolling) {
+      return;
+    }
+    setIsScrolling(true);
+    // @ts-ignore
+    const currentlyFocusedField = TextInput.State.currentlyFocusedInput()
       ? // @ts-ignore
         findNodeHandle(TextInput.State.currentlyFocusedInput())
       : TextInput.State.currentlyFocusedField();
@@ -152,6 +158,7 @@ export default function useInputScrollHandler(options: Options = {}) {
             );
           }
         );
+        setIsScrolling(false);
       }
     );
   };
@@ -172,15 +179,26 @@ export default function useInputScrollHandler(options: Options = {}) {
 
   // Effects
   useEffect(() => {
-    Keyboard.addListener(_keyboardWillShow, handleUpdateKeyboardSpace);
-    Keyboard.addListener(_keyboardWillHide, handleResetKeyboardSpace);
+
+    const handleUpdate = (e: any) => {
+      handleUpdateKeyboardSpace(e, isScrolling);
+    }
+
+    const handleReset = (e: any) => {
+      // Set isScrolling state to false when keyboard closes
+      setIsScrolling(false);
+      handleResetKeyboardSpace(e);
+    }
+
+    Keyboard.addListener(_keyboardWillShow, handleUpdate);
+    Keyboard.addListener(_keyboardWillHide, handleReset);
 
     return () => {
-      Keyboard.removeListener(_keyboardWillShow, handleUpdateKeyboardSpace);
-      Keyboard.removeListener(_keyboardWillHide, handleResetKeyboardSpace);
+      Keyboard.removeListener(_keyboardWillShow, handleUpdate);
+      Keyboard.removeListener(_keyboardWillHide, handleReset);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isScrolling, setIsScrolling]);
 
   return {
     scrollHandler: {
@@ -192,3 +210,4 @@ export default function useInputScrollHandler(options: Options = {}) {
     keyboardSpace,
   };
 }
+
