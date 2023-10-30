@@ -194,8 +194,8 @@ export default function useInputScrollHandler(options: Options = {}) {
     Keyboard.addListener(_keyboardWillHide, handleReset);
 
     return () => {
-      Keyboard.removeListener(_keyboardWillShow, handleUpdate);
-      Keyboard.removeListener(_keyboardWillHide, handleReset);
+      Keyboard.removeAllListeners(_keyboardWillShow);
+      Keyboard.removeAllListeners(_keyboardWillHide);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isScrolling, setIsScrolling]);
