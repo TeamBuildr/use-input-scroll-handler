@@ -50,7 +50,8 @@ export default function useInputScrollHandler(options: Options = {}) {
 
   // Functions
   const getScrollResponder = () => {
-    const responder = (ref.current?.getScrollResponder() as unknown) as ScrollView;
+    const responder =
+      ref.current?.getScrollResponder() as unknown as ScrollView;
 
     return responder;
   };
@@ -179,23 +180,28 @@ export default function useInputScrollHandler(options: Options = {}) {
 
   // Effects
   useEffect(() => {
-
     const handleUpdate = (e: any) => {
       handleUpdateKeyboardSpace(e, isScrolling);
-    }
+    };
 
     const handleReset = (e: any) => {
       // Set isScrolling state to false when keyboard closes
       setIsScrolling(false);
       handleResetKeyboardSpace(e);
-    }
+    };
 
-    Keyboard.addListener(_keyboardWillShow, handleUpdate);
-    Keyboard.addListener(_keyboardWillHide, handleReset);
+    const onShowSubscription = Keyboard.addListener(
+      _keyboardWillShow,
+      handleUpdate
+    );
+    const onHideSubscription = Keyboard.addListener(
+      _keyboardWillHide,
+      handleReset
+    );
 
     return () => {
-      Keyboard.removeListener(_keyboardWillShow, handleUpdate);
-      Keyboard.removeListener(_keyboardWillHide, handleReset);
+      onShowSubscription.remove();
+      onHideSubscription.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isScrolling, setIsScrolling]);
@@ -210,4 +216,3 @@ export default function useInputScrollHandler(options: Options = {}) {
     keyboardSpace,
   };
 }
-
